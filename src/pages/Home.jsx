@@ -15,7 +15,7 @@ const Home = () => {
     // Simula a busca dos dados do sistema em tempo real a partir da nova API
     const fetchStats = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/stats');
+        const response = await fetch('/api/stats');
         const data = await response.json();
         setStats({
           fazendas: data.fazendas,
