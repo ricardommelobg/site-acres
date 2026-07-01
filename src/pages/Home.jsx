@@ -1,8 +1,44 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, ShieldCheck, Target, Users, Sprout } from 'lucide-react';
+import { ArrowRight, CheckCircle, ShieldCheck, Target, Users, Sprout, TrendingUp, MapPin } from 'lucide-react';
 import './Home.css';
 
 const Home = () => {
+  const [stats, setStats] = useState({
+    fazendas: 0,
+    estados: []
+  });
+  
+  const [loadingStats, setLoadingStats] = useState(true);
+
+  useEffect(() => {
+    // Simula a busca dos dados do sistema em tempo real a partir da nova API
+    const fetchStats = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/stats');
+        const data = await response.json();
+        setStats({
+          fazendas: data.fazendas,
+          estados: data.estados
+        });
+        setLoadingStats(false);
+      } catch (error) {
+        console.error("Erro ao buscar estatísticas:", error);
+        // Fallback or just stop loading if it fails
+        setLoadingStats(false);
+      }
+    };
+
+    fetchStats();
+    
+    // Simula atualizações em tempo real a cada 30 segundos
+    const interval = setInterval(() => {
+      fetchStats();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="home fade-in">
       {/* Hero Section */}
@@ -23,6 +59,43 @@ const Home = () => {
             <Link to="/contato" className="btn btn-outline hero-btn-outline">
               Fale Conosco
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics Section */}
+      <section className="statistics-section">
+        <div className="container">
+          <div className="stats-banner">
+            <div className="stat-item">
+              <TrendingUp className="stat-icon text-accent" size={28} />
+              <div className="stat-info">
+                <span className="stat-label">Fazendas sendo Negociadas</span>
+                {loadingStats ? (
+                  <span className="stat-value skeleton-text">--</span>
+                ) : (
+                  <span className="stat-value">{stats.fazendas}</span>
+                )}
+              </div>
+            </div>
+            
+            <div className="stat-divider"></div>
+            
+            <div className="stat-item">
+              <MapPin className="stat-icon text-accent" size={28} />
+              <div className="stat-info">
+                <span className="stat-label">Estados</span>
+                {loadingStats ? (
+                  <span className="stat-value skeleton-text">--</span>
+                ) : (
+                  <div className="stat-states">
+                    {stats.estados.map(estado => (
+                      <span key={estado} className="state-badge">{estado}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>
