@@ -159,10 +159,14 @@ const Home = () => {
               </Link>
             </div>
             <div className="services-image">
-              <div className="image-placeholder">
-                <Sprout size={80} className="placeholder-icon" />
-                <p>Imagem Premium de Agronegócio</p>
-              </div>
+              <video 
+                src="/Cinematic_medium_shot_of_the_202607011200.mp4" 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="services-video"
+              ></video>
             </div>
           </div>
         </div>
